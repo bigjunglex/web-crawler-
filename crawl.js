@@ -17,10 +17,10 @@ const getURLsFromHTML = (body, baseURL) => {
 }
 
 const crawlPage = async (baseURL, currentUrl = baseURL, pages = {}) => {
-    if 
+    
+    if (domainName(baseURL) !== domainName(currentUrl)) return pages
 
-    currentUrl = normalizeURL(currentUrl);
-
+    // currentUrl = normalizeURL(currentUrl);
     
     try {
         const response = await fetch(currentUrl)

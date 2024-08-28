@@ -4,7 +4,7 @@ function main() {
     const argv = process.argv
     if (argv.length < 3 || argv.length > 3) {
         console.log('invalid input')
-        exit()
+        process.exit()
     }
     
     const BASE_URL = argv.pop()
