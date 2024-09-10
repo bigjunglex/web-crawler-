@@ -16,25 +16,54 @@ const getURLsFromHTML = (body, baseURL) => {
     return [...dom.window.document.querySelectorAll("a")].map(a => a.href)
 }
 
-const crawlPage = async (baseURL, currentUrl = baseURL, pages = {}) => {
-    
-    if (domainName(baseURL) !== domainName(currentUrl)) return pages
-
-    // currentUrl = normalizeURL(currentUrl);
-    
+const fetchUrl = async (url) => {
     try {
-        const response = await fetch(currentUrl)
+        const response = await fetch(url, {mode: 'cors'})
         if (`${response.status}`.startsWith('4')) {
             throw new Error(`Rejected with ${response.status}`)
         }
         if (!response.headers.get('content-type').includes('text/html')) {
-            throw new Error('Wrong content type')
+            throw new Error(`Wrong content type, fetching ${url}`)
         }
-        const text = await response.text()
-        console.log(text)
+        
+        const html = await response.text()
+        
+        return html
+
     } catch (error) {
-        console.log(error)
+        return null
     }
+}
+
+
+const crawlPage = async (baseURL, currentUrl = baseURL, pages = {}) => {
+    
+    if (domainName(baseURL) !== domainName(currentUrl)) return pages
+
+    const normalCurrentUrl = normalizeURL(currentUrl);
+
+    if (pages.hasOwnProperty(normalCurrentUrl)) {
+        pages[normalCurrentUrl]++
+        return pages
+    }  
+
+    pages[normalCurrentUrl] = 1
+
+    let HTMLbody;
+
+    try {
+        HTMLbody = await fetchUrl(currentUrl)
+    }catch(err){
+        console.log(`${err.message}`)
+        return pages
+    }
+
+    const allUrls = getURLsFromHTML(HTMLbody, baseURL)
+    for (let i = 0; i < allUrls.length; i++){
+        pages = await crawlPage(baseURL, allUrls[i], pages)
+    }
+
+    return pages
 }
 
 export { normalizeURL, getURLsFromHTML, crawlPage }

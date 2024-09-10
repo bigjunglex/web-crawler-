@@ -1,6 +1,6 @@
 import { crawlPage } from './crawl.js'
 
-function main() {
+async function main() {
     const argv = process.argv
     if (argv.length < 3 || argv.length > 3) {
         console.log('invalid input')
@@ -11,7 +11,9 @@ function main() {
 
     console.log(`starting seach from ${BASE_URL}`)
     
-    crawlPage(BASE_URL)
+    const pages = await crawlPage(BASE_URL)
+
+    console.log(pages)
 }
 
 main()

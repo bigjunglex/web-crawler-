@@ -4,6 +4,7 @@
   "description": "simple web crawler in js",
   "type": "module",
   "scripts": {
+    "testing": "node main.js https://wagslane.dev",
     "start": "node main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
