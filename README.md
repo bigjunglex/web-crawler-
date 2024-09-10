@@ -1,2 +1,2 @@
 # web-crawler-
-simple web crawler in js
+simple web crawler in js for boot.dev project
